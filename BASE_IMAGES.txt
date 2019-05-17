@@ -1,0 +1,8 @@
+jupyter/base-notebook:abdb27a6dfbb
+jupyter/minimal-notebook:abdb27a6dfbb
+jupyter/scipy-notebook:abdb27a6dfbb
+jupyter/r-notebook:abdb27a6dfbb
+jupyter/tensorflow-notebook:abdb27a6dfbb
+jupyter/datascience-notebook:abdb27a6dfbb
+jupyter/pyspark-notebook:abdb27a6dfbb
+jupyter/all-spark-notebook:abdb27a6dfbb
