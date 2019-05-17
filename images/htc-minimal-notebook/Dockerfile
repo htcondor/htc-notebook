@@ -9,12 +9,21 @@
 #
 
 FROM jupyter/minimal-notebook:abdb27a6dfbb
+
+# metadata
+
+LABEL maintainer="chtc@cs.wisc.edu"
+
+# config
+
 ENV HTMAP_DOCKER_IMAGE="jupyter/minimal-notebook:abdb27a6dfbb"
 ARG JUPYTERHUB_VERSION=0.9.4
 ARG HTCONDOR_VERSION=8.8
 ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
+
+# actual build
 
 USER root
 
