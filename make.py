@@ -17,11 +17,7 @@ for base_image in (ROOT / 'BASE_IMAGES.txt').read_text().splitlines():
     our_image = 'htc-{}'.format(image)
 
     image_dir = IMAGES_DIR / our_image
-    image_dir.mkdir()
-
-    other_files = [p for p in TEMPLATE_DIR.iterdir() if p.name != 'Dockerfile']
-    for p in other_files:
-        shutil.copy2(p, image_dir / p.name)
+    shutil.copytree(TEMPLATE_DIR, image_dir, ignore = lambda *_: ['Dockerfile'])
 
     df = image_dir / 'Dockerfile'
     df_template = (TEMPLATE_DIR / 'Dockerfile').read_text()
