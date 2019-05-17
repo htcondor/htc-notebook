@@ -1,1 +1,1 @@
-# htc-notebook
+# High-Throughput Computing Notebooks
