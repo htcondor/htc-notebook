@@ -1,15 +1,15 @@
 ########################
 # Dockerfile to make image spawned by CHTC Jupyterhub that
-# launches a personal HTCondor instance upon spawning a 
+# launches a personal HTCondor instance upon spawning a
 # notebook.  Designed to be used with SystemUserSpawner in mind.
-# Author: Todd Tannenbaum <tannenba@cs.wisc.edu> 
+# Author: Todd Tannenbaum <tannenba@cs.wisc.edu>
 #
 # Copyright (C) HTCondor Team, Computer Sciences Dept, Univ of Wisconsin-Madison
 # Distributed under terms of the Apache Licence, Version 2.0.
 #
 
-FROM jupyter/scipy-notebook:6c6ebe8734e9
-ENV HTMAP_DOCKER_IMAGE="jupyter/scipy-notebook:6c6ebe8734e9"
+FROM jupyter/base-notebook:abdb27a6dfbb
+ENV HTMAP_DOCKER_IMAGE="jupyter/base-notebook:abdb27a6dfbb"
 ARG JUPYTERHUB_VERSION=0.9.4
 ARG HTCONDOR_VERSION=8.8
 ARG NB_USER="jovyan"
@@ -42,7 +42,7 @@ USER $NB_UID
 RUN conda config --add channels conda-canary \
  && conda update -n base conda
 
-USER root 
+USER root
 
 COPY start-htcondor.sh /usr/./local/bin/before-notebook.d/
 COPY condor_config.local /etc/condor/condor_config.local
@@ -51,7 +51,7 @@ RUN mkdir -p /usr/local/bin/before-notebook.d \
   && pip install --no-cache \
   jupyterhub==$JUPYTERHUB_VERSION \
   htcondor \
-  git+https://github.com/htcondor/htmap.git
+  htmap
 
 USER $NB_UID
 
