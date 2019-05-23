@@ -17,6 +17,7 @@ LABEL maintainer="chtc@cs.wisc.edu"
 # config
 
 ENV HTMAP_DOCKER_IMAGE="<BASE_IMAGE>"
+ENV HTMAP_DELIVERY_METHOD="assume"
 ARG JUPYTERHUB_VERSION=0.9.4
 ARG HTCONDOR_VERSION=8.8
 ARG NB_USER="jovyan"
@@ -63,4 +64,3 @@ RUN mkdir -p /usr/local/bin/before-notebook.d \
   htmap
 
 USER $NB_UID
-
