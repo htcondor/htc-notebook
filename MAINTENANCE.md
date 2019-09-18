@@ -52,12 +52,14 @@ is what would be produced by the current `make.py` and `template/` - be vigilant
 4. Go to the new repository and click on the "Builds" tab, then "Configure Automated Builds"
    in the top-right corner.
 5. Set the "Source Repository" to `htc-notebook`.
-6. Add a "Build Rule" with Source `master`, Docker Tag `latest`, 
+6. If this image should be updated whenever the underlying `FROM` image is updated,
+   enable "Repository Links > Enabled for Base Image".
+7. Add a "Build Rule" with Source `master`, Docker Tag `latest`, 
    Dockerfile location `Dockerfile`, and build Build Context `/notebooks/<name>/`,
    where `<name>` is the name of the directory containing the new Dockerfile.
    Leave Autobuild and Build Caching enabled.
-   Hit "Save and Build".
-   
+8. Click "Save and Build".
+
 The new image should then be built and pushed by Docker Hub.
 Their build infrastructure is quite slow 
 (as of the time of writing, it typically takes at least 20 minutes to finish).
