@@ -2,8 +2,11 @@
 
 set -e
 
-# Tag the latest build with the short git sha. Push the tag in addition
+# Tag the latest build with the date. Push the tag in addition
 # to the "latest" tag already pushed.
-GIT_SHA_TAG=${SOURCE_COMMIT:0:12}
-docker tag $IMAGE_NAME $DOCKER_REPO:$GIT_SHA_TAG
-docker push $DOCKER_REPO:$GIT_SHA_TAG
+DATE=$(date +%F)
+
+TAG=$DOCKER_REPO:$DATE
+
+docker tag "$IMAGE_NAME" "$TAG"
+docker push "$TAG"

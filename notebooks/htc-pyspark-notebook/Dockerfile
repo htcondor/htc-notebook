@@ -8,7 +8,7 @@
 # Distributed under terms of the Apache Licence, Version 2.0.
 #
 
-FROM jupyter/pyspark-notebook:abdb27a6dfbb
+FROM jupyter/pyspark-notebook:latest
 
 # metadata
 
@@ -16,7 +16,7 @@ LABEL maintainer="chtc@cs.wisc.edu"
 
 # config
 
-ENV HTMAP_DOCKER_IMAGE="jupyter/pyspark-notebook:abdb27a6dfbb"
+ENV HTMAP_DOCKER_IMAGE="jupyter/pyspark-notebook:latest"
 ENV HTMAP_DELIVERY_METHOD="assume"
 ARG JUPYTERHUB_VERSION=0.9.4
 ARG HTCONDOR_VERSION=8.8
