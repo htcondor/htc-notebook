@@ -6,33 +6,26 @@
 #
 # Copyright (C) HTCondor Team, Computer Sciences Dept, Univ of Wisconsin-Madison
 # Distributed under terms of the Apache Licence, Version 2.0.
-#
 
 FROM jupyter/pyspark-notebook:latest
 
 # metadata
-
 LABEL maintainer="chtc@cs.wisc.edu"
 
-# config
+# select HTCondor release series (first two digits only!)
+ARG HTCONDOR_VERSION=8.9
 
-ENV HTMAP_DOCKER_IMAGE="jupyter/pyspark-notebook:latest"
-ENV HTMAP_DELIVERY_METHOD="assume"
-ARG JUPYTERHUB_VERSION=0.9.4
-ARG HTCONDOR_VERSION=8.8
+# these are really from the base image, but ARG is not passed to child builds
+# so we need to repeat them here if we want to use them
 ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
-# actual build
+# default to jupyter lab
+ENV JUPYTER_ENABLE_LAB=1
 
+# install HTCondor, and a few other convenience tools
 USER root
-
-# Install latest HTCondor native package, as well
-# as HTCondor python bindings, htmap package, and
-# a few handy things like vim, less.
-
-ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq \
  && apt-get install -qq gnupg vim less git \
  && wget -qO - https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key | apt-key add - \
@@ -41,26 +34,18 @@ RUN apt-get update -qq \
  && apt-get clean -qq \
  && rm -rf /var/lib/apt/lists/*
 
+# add a script that starts HTCondor before the notebook runs
+COPY start-htcondor.sh /usr/local/bin/before-notebook.d/
 
+# add an optimized HTCondor config
+COPY --chown=jovyan:0 condor_config.local /etc/condor/condor_config.local
+
+# install HTCondor Python bindings, HTChirp, and HTMap
 USER $NB_UID
+RUN pip install --no-cache-dir htcondor htchirp htmap
 
-# We want the end user to be able to conda install new
-# packages without sudo.  To do this, we need to upgrade
-# the version of Conda to avoid hitting this conda bug:
-# https://github.com/conda/conda/issues/7267
+# set up environment variable hooks for HTMap settings
+# todo: once HTMap can decide the delivery method itself, remove it from here!
+ENV HTMAP_DELIVERY_METHOD="assume"
 
-RUN conda config --add channels conda-canary \
- && conda update -n base conda
-
-USER root
-
-COPY start-htcondor.sh /usr/./local/bin/before-notebook.d/
-COPY condor_config.local /etc/condor/condor_config.local
-
-RUN mkdir -p /usr/local/bin/before-notebook.d \
-  && pip install --no-cache \
-  jupyterhub==$JUPYTERHUB_VERSION \
-  htcondor \
-  htmap
-
-USER $NB_UID
+# todo: embed image name so HTMap can use the same image for exec
