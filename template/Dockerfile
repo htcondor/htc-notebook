@@ -27,7 +27,7 @@ ENV JUPYTER_ENABLE_LAB=1
 # install HTCondor, and a few other convenience tools
 USER root
 RUN apt-get update -qq \
- && apt-get install -qq gnupg vim less git \
+ && apt-get install -qq gnupg vim less git man \
  && wget -qO - https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key | apt-key add - \
  && echo "deb  http://research.cs.wisc.edu/htcondor/ubuntu/${HTCONDOR_VERSION}/bionic bionic contrib" >> /etc/apt/sources.list \
  && apt-get update && apt-get -qq install htcondor \
