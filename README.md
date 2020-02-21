@@ -16,7 +16,7 @@ users to a larger HTCondor pool.
 To run one of the images, use a `docker run` command that looks like
 
 ```bash
-docker run -p 8888:8888 htcondor/htc-scipy-notebook:latest
+docker run -it --rm -p 8888:8888 htcondor/htc-scipy-notebook:latest
 ```
 
 Replace `htc-scipy-notebook` with your preferred stack,
