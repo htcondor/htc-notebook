@@ -27,18 +27,13 @@ ENV JUPYTER_ENABLE_LAB=1
 # install HTCondor, and a few other convenience tools
 USER root
 RUN apt-get update -qq \
- && apt-get install -qq gnupg vim less git \
+ && apt-get install -qq gnupg vim less git man \
  && wget -qO - https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key | apt-key add - \
  && echo "deb  http://research.cs.wisc.edu/htcondor/ubuntu/${HTCONDOR_VERSION}/bionic bionic contrib" >> /etc/apt/sources.list \
- && apt-get update && apt-get -qq install htcondor \
+ && apt-get update -qq \
+ && apt-get install -qq htcondor \
  && apt-get clean -qq \
  && rm -rf /var/lib/apt/lists/*
-
-# add a script that starts HTCondor before the notebook runs
-COPY start-htcondor.sh /usr/local/bin/before-notebook.d/
-
-# add an optimized HTCondor config
-COPY --chown=jovyan:0 condor_config.local /etc/condor/condor_config.local
 
 # install HTCondor Python bindings, HTChirp, and HTMap
 USER $NB_UID
@@ -46,6 +41,13 @@ RUN pip install --no-cache-dir htcondor htchirp htmap
 
 # set up environment variable hooks for HTMap settings
 # todo: once HTMap can decide the delivery method itself, remove it from here!
+# todo: embed image name so HTMap can use the same image for exec
 ENV HTMAP_DELIVERY_METHOD="assume"
 
-# todo: embed image name so HTMap can use the same image for exec
+# add an entrypoint script that starts HTCondor when the container starts
+COPY --chown=jovyan:100 entrypoint.sh /.entrypoint.sh
+ENTRYPOINT ["tini", "-g", "--", "/.entrypoint.sh"]
+CMD ["start-notebook.sh"]
+
+# add an optimized HTCondor config
+COPY --chown=jovyan:100 condor_config.local /etc/condor/condor_config.local

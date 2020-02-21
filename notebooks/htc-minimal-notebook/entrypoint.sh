@@ -19,3 +19,5 @@ else
 fi
 
 echo $_MSG
+
+exec "$@"
