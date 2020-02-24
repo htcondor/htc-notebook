@@ -46,6 +46,7 @@ ENV HTMAP_DELIVERY_METHOD="assume"
 
 # add an entrypoint script that starts HTCondor when the container starts
 COPY --chown=jovyan:100 entrypoint.sh /.entrypoint.sh
+RUN chmod +x /.entrypoint.sh
 ENTRYPOINT ["tini", "-g", "--", "/.entrypoint.sh"]
 CMD ["start-notebook.sh"]
 
