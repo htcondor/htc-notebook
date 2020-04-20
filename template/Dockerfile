@@ -12,14 +12,8 @@ FROM <BASE_IMAGE>
 # metadata
 LABEL maintainer="chtc@cs.wisc.edu"
 
-# select HTCondor release series (first two digits only!)
+# select HTCondor release series (first two parts only!)
 ARG HTCONDOR_VERSION=8.9
-
-# these are really from the base image, but ARG is not passed to child builds
-# so we need to repeat them here if we want to use them
-ARG NB_USER="jovyan"
-ARG NB_UID="1000"
-ARG NB_GID="100"
 
 # default to jupyter lab
 ENV JUPYTER_ENABLE_LAB=1
@@ -36,7 +30,7 @@ RUN apt-get update -qq \
  && rm -rf /var/lib/apt/lists/*
 
 # install HTCondor Python bindings, HTChirp, and HTMap
-USER $NB_UID
+USER $NB_UID:$NB_GID
 RUN pip install --no-cache-dir htcondor htchirp htmap
 
 # set up environment variable hooks for HTMap settings
@@ -44,11 +38,11 @@ RUN pip install --no-cache-dir htcondor htchirp htmap
 # todo: embed image name so HTMap can use the same image for exec
 ENV HTMAP_DELIVERY_METHOD="assume"
 
-# add an entrypoint script that starts HTCondor when the container starts
-COPY --chown=jovyan:100 entrypoint.sh /.entrypoint.sh
-RUN chmod +x /.entrypoint.sh
+# add an HTCondor config and an entrypoint script starts HTCondor
+COPY entrypoint.sh /.entrypoint.sh
+COPY condor_config.local /etc/condor/condor_config.local
+RUN fix-permissions /.entrypoint.sh /etc/condor/condor_config.local
 ENTRYPOINT ["tini", "-g", "--", "/.entrypoint.sh"]
 CMD ["start-notebook.sh"]
 
 # add an optimized HTCondor config
-COPY --chown=jovyan:100 condor_config.local /etc/condor/condor_config.local
