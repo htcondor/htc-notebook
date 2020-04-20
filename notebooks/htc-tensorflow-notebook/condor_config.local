@@ -4,15 +4,6 @@ use ROLE: CentralManager
 use ROLE: Submit
 use ROLE: Execute
 
-# Edit paths so all state gets stored in user home directory
-LOCAL_DIR=$ENV(HOME)/.condor/jupyter_htcondor_state
-LOCK=$(LOCAL_DIR)/lock
-LOG=$(LOCAL_DIR)/log
-RUN=$(LOCAL_DIR)/run
-SPOOL=$(LOCAL_DIR)/spool
-EXECUTE=$(LOCAL_DIR)/execute
-CRED_STORE_DIR=$(LOCAL_DIR)/cred_dir
-
 # Tuning so jobs start quickly
 SCHEDD_INTERVAL=5
 NEGOTIATOR_INTERVAL=2

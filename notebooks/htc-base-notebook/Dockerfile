@@ -18,8 +18,17 @@ ARG HTCONDOR_VERSION=8.9
 # default to jupyter lab
 ENV JUPYTER_ENABLE_LAB=1
 
-# install HTCondor, and a few other convenience tools
 USER root
+
+# add HTCondor config
+COPY condor_config.local /etc/condor/condor_config.local
+COPY user_config /home/${NB_USER}/.condor/user_config
+
+# add an entrypoint that starts HTCondor
+COPY entrypoint.sh /.entrypoint.sh
+
+# install HTCondor, and a few other convenience tools
+# also fix permissions on the files copied above
 RUN apt-get update -qq \
  && apt-get install -qq gnupg vim less git man \
  && wget -qO - https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key | apt-key add - \
@@ -27,10 +36,14 @@ RUN apt-get update -qq \
  && apt-get update -qq \
  && apt-get install -qq htcondor \
  && apt-get clean -qq \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && chmod +x /.entrypoint.sh \
+ && chown -R ${NB_UID}:${NB_GID} /home/${NB_USER}/.condor \
+ && fix-permissions ${HOME}
+
+USER $NB_UID:$NB_GID
 
 # install HTCondor Python bindings, HTChirp, and HTMap
-USER $NB_UID:$NB_GID
 RUN pip install --no-cache-dir htcondor htchirp htmap
 
 # set up environment variable hooks for HTMap settings
@@ -38,11 +51,5 @@ RUN pip install --no-cache-dir htcondor htchirp htmap
 # todo: embed image name so HTMap can use the same image for exec
 ENV HTMAP_DELIVERY_METHOD="assume"
 
-# add an HTCondor config and an entrypoint script starts HTCondor
-COPY entrypoint.sh /.entrypoint.sh
-COPY condor_config.local /etc/condor/condor_config.local
-RUN fix-permissions /.entrypoint.sh /etc/condor/condor_config.local
 ENTRYPOINT ["tini", "-g", "--", "/.entrypoint.sh"]
 CMD ["start-notebook.sh"]
-
-# add an optimized HTCondor config
