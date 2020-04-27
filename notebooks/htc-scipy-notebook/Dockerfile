@@ -12,31 +12,38 @@ FROM jupyter/scipy-notebook:latest
 # metadata
 LABEL maintainer="chtc@cs.wisc.edu"
 
-# select HTCondor release series (first two digits only!)
+# select HTCondor release series (first two parts only!)
 ARG HTCONDOR_VERSION=8.9
-
-# these are really from the base image, but ARG is not passed to child builds
-# so we need to repeat them here if we want to use them
-ARG NB_USER="jovyan"
-ARG NB_UID="1000"
-ARG NB_GID="100"
 
 # default to jupyter lab
 ENV JUPYTER_ENABLE_LAB=1
 
-# install HTCondor, and a few other convenience tools
 USER root
-RUN apt-get update -qq \
- && apt-get install -qq gnupg vim less git man \
+
+# add HTCondor config
+COPY condor_config.local /etc/condor/condor_config.local
+COPY user_config /home/${NB_USER}/.condor/user_config
+
+# add an entrypoint that starts HTCondor
+COPY entrypoint.sh /.entrypoint.sh
+
+# install HTCondor, and a few other convenience tools
+# also fix permissions on the files copied above
+RUN apt-get update -y \
+ && apt-get install -y gnupg vim less git man \
  && wget -qO - https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key | apt-key add - \
  && echo "deb  http://research.cs.wisc.edu/htcondor/ubuntu/${HTCONDOR_VERSION}/bionic bionic contrib" >> /etc/apt/sources.list \
- && apt-get update -qq \
- && apt-get install -qq htcondor \
- && apt-get clean -qq \
- && rm -rf /var/lib/apt/lists/*
+ && apt-get update -y \
+ && apt-get install -y htcondor \
+ && apt-get clean -y \
+ && rm -rf /var/lib/apt/lists/* \
+ && chmod +x /.entrypoint.sh \
+ && chown -R ${NB_UID}:${NB_GID} /home/${NB_USER}/.condor \
+ && fix-permissions ${HOME}
+
+USER $NB_UID:$NB_GID
 
 # install HTCondor Python bindings, HTChirp, and HTMap
-USER $NB_UID
 RUN pip install --no-cache-dir htcondor htchirp htmap
 
 # set up environment variable hooks for HTMap settings
@@ -44,11 +51,5 @@ RUN pip install --no-cache-dir htcondor htchirp htmap
 # todo: embed image name so HTMap can use the same image for exec
 ENV HTMAP_DELIVERY_METHOD="assume"
 
-# add an entrypoint script that starts HTCondor when the container starts
-COPY --chown=jovyan:100 entrypoint.sh /.entrypoint.sh
-RUN chmod +x /.entrypoint.sh
 ENTRYPOINT ["tini", "-g", "--", "/.entrypoint.sh"]
 CMD ["start-notebook.sh"]
-
-# add an optimized HTCondor config
-COPY --chown=jovyan:100 condor_config.local /etc/condor/condor_config.local
