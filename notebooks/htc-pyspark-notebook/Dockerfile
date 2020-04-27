@@ -29,13 +29,13 @@ COPY entrypoint.sh /.entrypoint.sh
 
 # install HTCondor, and a few other convenience tools
 # also fix permissions on the files copied above
-RUN apt-get update -qq \
- && apt-get install -qq gnupg vim less git man \
+RUN apt-get update -y \
+ && apt-get install -y gnupg vim less git man \
  && wget -qO - https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key | apt-key add - \
  && echo "deb  http://research.cs.wisc.edu/htcondor/ubuntu/${HTCONDOR_VERSION}/bionic bionic contrib" >> /etc/apt/sources.list \
- && apt-get update -qq \
- && apt-get install -qq htcondor \
- && apt-get clean -qq \
+ && apt-get update -y \
+ && apt-get install -y htcondor \
+ && apt-get clean -y \
  && rm -rf /var/lib/apt/lists/* \
  && chmod +x /.entrypoint.sh \
  && chown -R ${NB_UID}:${NB_GID} /home/${NB_USER}/.condor \
