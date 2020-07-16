@@ -22,11 +22,11 @@ documentation for more general information on using these images
 
 ## Quick Start
 
-To run one of the images,
+To pull and run a pre-built HTC Notebook image from Docker Hub,
 use a `docker run` command that looks like
 
-```bash
-docker run -it --rm -p 8888:8888 htcondor/htc-scipy-notebook:latest
+```console
+$ docker run -it --rm -p 8888:8888 htcondor/htc-scipy-notebook:latest
 ```
 
 Replace `htc-scipy-notebook` with your preferred stack 
@@ -40,8 +40,8 @@ are available as well.
 To bind-mount the current working directory into the container, add a `--mount`
 option to your `docker run`:
 
-```bash
-docker run -it --rm -p 8888:8888 --mount type=bind,source="$(pwd)",target=/home/jovyan/work htcondor/htc-scipy-notebook:latest
+```console
+$ docker run -it --rm -p 8888:8888 --mount type=bind,source="$(pwd)",target=/home/jovyan/work htcondor/htc-scipy-notebook:latest
 ```
 
 This will link the directory that you launch the container in to the path
@@ -51,8 +51,8 @@ container will be reflected outside, and vice-versa.
 If you don't want to run Jupyter Lab automatically and want (for example)
 a `bash` shell instead, add `bash` to the end of the `docker run` command:
 
-```bash
-docker run -it --rm -p 8888:8888 htcondor/htc-scipy-notebook:latest bash
+```console
+$ docker run -it --rm -p 8888:8888 htcondor/htc-scipy-notebook:latest bash
 ```
 
 
