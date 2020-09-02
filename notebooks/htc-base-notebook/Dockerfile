@@ -31,7 +31,7 @@ COPY entrypoint.sh /.entrypoint.sh
 RUN apt-get update -y \
  && apt-get install -y gnupg vim less git man \
  && wget -qO - https://research.cs.wisc.edu/htcondor/ubuntu/HTCondor-Release.gpg.key | apt-key add - \
- && echo "deb  http://research.cs.wisc.edu/htcondor/ubuntu/${HTCONDOR_VERSION}/bionic bionic contrib" >> /etc/apt/sources.list \
+ && echo "deb  http://research.cs.wisc.edu/htcondor/ubuntu/${HTCONDOR_VERSION}/focal focal contrib" >> /etc/apt/sources.list \
  && apt-get update -y \
  && apt-get install -y htcondor \
  && apt-get clean -y \
