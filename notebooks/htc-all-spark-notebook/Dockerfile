@@ -22,7 +22,6 @@ USER root
 
 # add HTCondor config
 COPY condor_config.local /etc/condor/condor_config.local
-COPY user_config /home/${NB_USER}/.condor/user_config
 
 # add an entrypoint that starts HTCondor
 COPY entrypoint.sh /.entrypoint.sh
