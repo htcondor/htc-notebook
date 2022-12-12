@@ -1,8 +1,8 @@
-jupyter/base-notebook:latest
-jupyter/minimal-notebook:latest
-jupyter/scipy-notebook:latest
-jupyter/r-notebook:latest
-jupyter/tensorflow-notebook:latest
-jupyter/datascience-notebook:latest
-jupyter/pyspark-notebook:latest
-jupyter/all-spark-notebook:latest
+jupyter/base-notebook:ubuntu-20.04
+jupyter/minimal-notebook:ubuntu-20.04
+jupyter/scipy-notebook:ubuntu-20.04
+jupyter/r-notebook:ubuntu-20.04
+jupyter/tensorflow-notebook:ubuntu-20.04
+jupyter/datascience-notebook:ubuntu-20.04
+jupyter/pyspark-notebook:ubuntu-20.04
+jupyter/all-spark-notebook:ubuntu-20.04
