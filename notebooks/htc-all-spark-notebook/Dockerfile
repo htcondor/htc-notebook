@@ -31,7 +31,15 @@ RUN apt-get update -y \
  && apt-get clean -y \
  && rm -rf /var/lib/apt/lists/* \
  #
+ # Install HTCondor. Immediately stop the pool in case the installation
+ # script automatically started it.
+ #
  && curl -fsSL https://get.htcondor.org | /bin/bash -s -- --no-dry-run \
+ && condor_off -master \
+ && sleep 5 \
+ #
+ # Fix permissions on various files and directories.
+ #
  && chmod +x /.entrypoint.sh \
  && chown -R ${NB_UID}:${NB_GID} /home/${NB_USER}/.condor \
  && fix-permissions ${HOME}
