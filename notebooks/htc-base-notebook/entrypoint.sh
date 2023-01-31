@@ -31,4 +31,9 @@ fi
 
 echo $_MSG
 
+# Allow derived images to run additional runtime customizations.
+shopt -s nullglob
+for x in /image-init.d/*.sh; do source "$x"; done
+shopt -u nullglob
+
 exec "$@"
