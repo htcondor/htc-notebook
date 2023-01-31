@@ -49,7 +49,7 @@ USER $NB_UID:$NB_GID
 # install HTCondor Python bindings, HTChirp, and HTMap
 RUN pip install --no-cache-dir \
       htchirp \
-      htcondor==$(condor_version | head -n1 | cut -d " " -f 2) \
+      htcondor'>'=$(condor_version | head -n1 | cut -d " " -f 2) \
       htmap
 
 # set up environment variable hooks for HTMap settings
