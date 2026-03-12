@@ -64,8 +64,8 @@ For more detailed information on the Jupyter parts of the image, see the
 
 In addition to what is described there, every image has a 
 "personal" HTCondor pool running inside it, and includes the 
-[HTCondor Python Bindings](https://htcondor.readthedocs.io/en/latest/apis/python-bindings/index.html)
-and [HTMap](https://htmap.readthedocs.io/en/latest/).
+[HTCondor Python Bindings](https://htcondor.readthedocs.io/en/latest/apis/python-bindings/index.html).
+HTMap is no longer included, since it was abandoned.
 
 - [`htc-base-notebook`](https://hub.docker.com/r/htcondor/htc-base-notebook) - This is the smallest useful container; this is often the best image to `FROM` for custom images. 
 - [`htc-minimal-notebook`](https://hub.docker.com/r/htcondor/htc-minimal-notebook) - Adds useful command line tools like `git`, `emacs`, and `vim` to the `htc-base-notebook`.
