@@ -7,9 +7,7 @@ for i in $(<BASE_IMAGES.txt); do
     NAME=htc-${NAME%%:*}
     echo "======= $NAME ======="
     docker pull "$i"
-    docker image ls "htcondor/${NAME}" | grep htcondor > "${NAME}.out" || true
-    sed -i -e 's/  */:/' "${NAME}.out"
-    sed -i -e 's/ .*//' "${NAME}.out"
+    docker image ls "htcondor/${NAME}" --format '{{.Repository}}:{{.Tag}}' > "${NAME}.out"
     for IMAGE in $(<"${NAME}.out"); do
         docker image rm "${IMAGE}"
     done
