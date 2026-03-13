@@ -2,6 +2,10 @@
 # Exit on any error
 set -e
 
+# Get rid of test image
+docker image rm htc-notebook-test:latest || true
+
+# Create and tag images
 for i in $(<BASE_IMAGES.txt); do
     NAME=${i##*/}
     NAME=htc-${NAME%%:*}
