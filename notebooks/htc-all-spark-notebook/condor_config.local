@@ -13,6 +13,9 @@ SPOOL=$(LOCAL_DIR)/spool
 EXECUTE=$(LOCAL_DIR)/execute
 CRED_STORE_DIR=$(LOCAL_DIR)/cred_dir
 
+# Give jovyan administrator access
+ALLOW_ADMINISTRATOR = $(ALLOW_ADMINISTRATOR) jovyan@$(HOSTNAME)
+
 # Tuning so jobs start quickly
 SCHEDD_INTERVAL=5
 NEGOTIATOR_INTERVAL=2
