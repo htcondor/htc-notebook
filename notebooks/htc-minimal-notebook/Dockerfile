@@ -38,6 +38,7 @@ RUN apt-get update -y \
  && apt-get install -y condor \
  && apt-get clean -y \
  && rm -rf /var/lib/apt/lists/* \
+ && condor_version \
  && chmod +x /.entrypoint.sh \
  && chown -R ${NB_UID}:${NB_GID} /home/${NB_USER}/.condor \
  && fix-permissions ${HOME}
