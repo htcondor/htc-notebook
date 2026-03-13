@@ -18,6 +18,7 @@ for i in $(<BASE_IMAGES.txt); do
     VERSION=$(grep \$CondorVersion: "${NAME}.out")
     VERSION=${VERSION#* }
     VERSION=${VERSION%% *}
+    docker tag "htcondor/${NAME}:latest" "htcondor/${NAME}:${VERSION}"
     docker push "htcondor/${NAME}:${VERSION}"
     docker push "htcondor/${NAME}:latest"
 done
